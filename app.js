@@ -65,7 +65,8 @@ app.get("/posts/:postId",function(req,res){
     journalHome.findOne({_id: requestedPostId}, function(err, post){
       res.render("post", {
         title: post.title,
-        content: post.content
+        content: post.content,
+        postID: requestedPostId
       });
     });
 });
@@ -86,6 +87,20 @@ app.post("/compose",function(req,res){
   }
 });
 });
+
+app.post("/posts/:postId",function(req,res){
+  const requestedPostId = req.params.postId;
+  journalHome.findByIdAndRemove(requestedPostId,function(err){
+    if(err){
+      console.log(err);
+    }
+    else{
+      console.log("entry deleted");
+      res.redirect("/");
+    }
+});
+});
+
 
 let port = process.env.PORT;
 if (port == null || port == "") {
